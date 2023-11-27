@@ -6,7 +6,7 @@ class User(models.Model):
     surname = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
     password = models.CharField(max_length=50)
-    phone = models.CharField(max_length=50)
+    phone = models.CharField(max_length=50,unique=True)
     pasport_seriya = models.CharField(max_length=2)
     pasport_number = models.CharField(max_length=7)
 
