@@ -41,6 +41,14 @@ class Login(APIView):
         user = User.objects.all().filter(name=name,password=password)
         return Response({"MSG":"SUCCSESS"})
 
+class LogOut(APIView):
+    def get(self,request,pk):
+        user=User.objects.all().filter(id=pk).first()
+        if user:
+            refresh=RefreshToken.for_user(user)
+            return Response({"REFRESH TOKEN":str(refresh)})
+        else:
+            return Response({"ERRORS":"TOKEN ERROR"})
 
 
 
