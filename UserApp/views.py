@@ -27,6 +27,7 @@ class RegistrationView(APIView):
                     "REFRESH": str(refresh)
                 })
         return Response(serializer.errors)
+    #
 
 
 
