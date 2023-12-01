@@ -9,7 +9,7 @@ from .models import CardUser
 # Create your views here.
 
 class Add_Card(APIView):
-    quareser = CardUser.objects.all()
+    queryset = CardUser.objects.all()
     serializer_class = CardSRL
 
     def post(self, request):
@@ -32,3 +32,39 @@ class AddMoneyView(APIView):
         hamma_pul = user_puli + money
         updater = CardUser.objects.all().filter(card_number=card_number).update(money=hamma_pul)
         return Response({"message": "ok"})
+
+davlat_korxonalari = [
+    "Tatu",
+    "Qushbegi hotel",
+    "Mars IT ",
+    "Akfa",
+    "Korzika",
+    "Rivera",
+    "Chanel",
+    "Makro",
+    "Mobiuz",
+    "Uzbektelecom",
+    "Uzmobile",
+    "Ucell",
+    "Beeline",
+    "Perfectum Mobile",
+    "Uzonline",
+    "Uzinfocom",
+    "Uzpakhtasanoat",
+    "Uzdonmahsulot",
+    "Uzdoninvest",
+    "Mars IT",
+    "Uzavtosanoat",
+    "Akfa Medline",
+    "Tatu",
+    "Uztransgaz",
+    "Uztrans",
+    "Havo Yollari",
+    "Oftob medline",
+    "Kapitalbank",
+    "GM",
+    "BYD",
+    "KIA",
+    "Sanata",
+    "Chery",
+ ]
