@@ -8,6 +8,6 @@ class CardUser(models.Model):
     expired_date = models.DateTimeField()
 
     def __str__(self):
-        return self.card_holder
+        return str(self.card_holder)
 
 # Create your models here.
