@@ -12,3 +12,5 @@ class AddmoneySRL(ModelSerializer):
     class Meta:
         model = CardUser
         fields = ('card_number','money')
+
+

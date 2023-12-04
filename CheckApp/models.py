@@ -8,6 +8,8 @@ class CheckModel(models.Model):
     fiskal_raqam = models.CharField(unique=True,max_length=14)
     fiskal_belgi = models.IntegerField(unique=True)
     check_raqam = models.IntegerField(unique=True)
+    korxona_nomi = models.CharField(max_length=40,null=True)
+    money = models.IntegerField(default=None)
 
     def __str__(self):
         return str(self.fiskal_raqam)
