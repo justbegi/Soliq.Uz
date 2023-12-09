@@ -142,3 +142,4 @@ class QrCodeScanView(APIView):
         print(is_valid)
         return Response({"fiskal_raqam": fiskal_raqam}, status=status.HTTP_200_OK)
 
+#
