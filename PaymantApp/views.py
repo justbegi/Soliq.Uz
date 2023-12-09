@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import status
 
-from .serializers import CardSRL, AddmoneySRL
+from .serializers import CardSRL, AddmoneySRL,QrCodeScanSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
@@ -106,13 +106,13 @@ class CheckView(APIView):
                                                    fiskal_raqam=fiksal_raqam, fiskal_belgi=int(fiksal_belgi),
                                                    check_raqam=int(check_raqam))
                 create.save()
-                # status 200 response in HTTP
+
                 cashback = money / 100
-                #create pdf check
+
                 pdf = FPDF()
                 pdf.add_page()
                 pdf.set_font("Arial", size=12)
-                #check for all checkmodel objects
+
                 pdf.cell(200, 10, txt="Check raqami: " + str(check_raqam), ln=1, align="C")
                 pdf.cell(200, 10, txt="Seriya raqami: " + str(seriya_raqam), ln=1, align="C")
                 pdf.cell(200, 10, txt="Fiskal raqami: " + str(fiksal_raqam), ln=1, align="C")
@@ -122,7 +122,6 @@ class CheckView(APIView):
                 pdf.cell(200, 10, txt="Tovar narxi: " + str(money), ln=1, align="C")
                 pdf.cell(200, 10, txt="Cashback: " + str(cashback), ln=1, align="C")
                 pdf.output(f"uploads/check{fiksal_belgi}.pdf")
-
                 return Response({"MSG": "OK"}, status=status.HTTP_200_OK)
 
 
@@ -131,3 +130,15 @@ class CheckView(APIView):
             else:
 
                 return Response({"MSG": "else"})
+
+
+class QrCodeScanView(APIView):
+    """
+    API View for scanning QR codes.
+    """
+
+    def get(self, request, fiskal_raqam):
+        is_valid= CheckModel.objects.all().filter(fiskal_raqam=int(fiskal_raqam))
+        print(is_valid)
+        return Response({"fiskal_raqam": fiskal_raqam}, status=status.HTTP_200_OK)
+

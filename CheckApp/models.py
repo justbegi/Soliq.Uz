@@ -10,6 +10,7 @@ class CheckModel(models.Model):
     check_raqam = models.IntegerField(unique=True)
     korxona_nomi = models.CharField(max_length=40,null=True)
     money = models.IntegerField(default=None)
+    status = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.fiskal_raqam)
