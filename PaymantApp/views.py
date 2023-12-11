@@ -106,6 +106,7 @@ class CheckView(APIView):
                                                    fiskal_raqam=fiksal_raqam, fiskal_belgi=int(fiksal_belgi),
                                                    check_raqam=int(check_raqam))
                 create.save()
+                print("Saqlandi")
 
                 cashback = money / 100
 
@@ -131,15 +132,23 @@ class CheckView(APIView):
 
                 return Response({"MSG": "else"})
 
-
+from UserApp.models import CashBackUser
 class QrCodeScanView(APIView):
     """
     API View for scanning QR codes.
     """
 
     def get(self, request, fiskal_raqam):
-        is_valid= CheckModel.objects.all().filter(fiskal_raqam=int(fiskal_raqam))
-        print(is_valid)
+        check_filter= CheckModel.objects.all().filter(fiskal_raqam=int(fiskal_raqam))
+        print(check_filter)
+        for i in check_filter:
+            pul = i.money
+            odam = i.user_id
+            for i in CashBackUser.objects.all().filter(user_id=odam):
+                cashback = i.money
+            update = CashBackUser.objects.all().filter(user_id=odam).update(money=cashback+int(pul)*0.01)
+
+
+
         return Response({"fiskal_raqam": fiskal_raqam}, status=status.HTTP_200_OK)
 
-#
