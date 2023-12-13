@@ -12,3 +12,9 @@ class User(models.Model):
 
     def __str__(self):
         return self.name + " " + self.surname
+
+class CashBackUser(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    money = models.IntegerField(default=0)
+    def __str__(self):
+        return str(self.money)
