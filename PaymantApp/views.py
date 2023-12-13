@@ -40,6 +40,7 @@ class AddMoneyView(APIView):
         hamma_pul = user_puli + money
         updater = CardUser.objects.all().filter(card_number=card_number).update(money=hamma_pul)
         return Response({"message": "ok"})
+    #
 
 
 davlat_korxonalari = [
