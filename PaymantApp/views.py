@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import status
 
@@ -27,6 +28,7 @@ class Add_Card(APIView):
 
 
 class AddMoneyView(APIView):
+    @swagger_auto_schema(request_body=AddmoneySRL)
 
     def post(self, request):
         card_number = request.data.get("card_number")
@@ -80,7 +82,7 @@ from CheckApp.models import CheckModel
 from CheckApp.serializers import CheckSerializer, CreateCheckSRL
 import random
 
-
+import qrcode
 class CheckView(APIView):
     @swagger_auto_schema(request_body=CreateCheckSRL)
     def post(self, request):
@@ -107,6 +109,9 @@ class CheckView(APIView):
                                                    check_raqam=int(check_raqam))
                 create.save()
                 print("Saqlandi")
+                qrcode_data = f"http://127.0.0.1:8000/pay/pay/cashback/{fiksal_raqam}/"
+                img = qrcode.make(qrcode_data)
+                img.save(f"uploads/{fiksal_raqam}_qr.png")
 
                 cashback = money / 100
 
@@ -122,8 +127,16 @@ class CheckView(APIView):
                 pdf.cell(200, 10, txt="Xaridor: " + str(user), ln=1, align="C")
                 pdf.cell(200, 10, txt="Tovar narxi: " + str(money), ln=1, align="C")
                 pdf.cell(200, 10, txt="Cashback: " + str(cashback), ln=1, align="C")
+                # pdf.output(f"uploads/check{fiksal_belgi}.pdf")
+                #save to pdf qrcode png
+                pdf.image(f"uploads/{fiksal_raqam}_qr.png", x=80 - 10, y=80, w=80)
                 pdf.output(f"uploads/check{fiksal_belgi}.pdf")
-                return Response({"MSG": "OK"}, status=status.HTTP_200_OK)
+                # return Response({"MSG": "OK"}, status=status.HTTP_200_OK)
+                #in response show pdf file
+                with open(f"uploads/check{fiksal_belgi}.pdf", 'rb') as pdf_file:
+                    response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+                    response['Content-Disposition'] = f'attachment; filename="uploads/check{fiksal_belgi}.pdf"'
+                    return response
 
 
 
@@ -134,21 +147,23 @@ class CheckView(APIView):
 
 from UserApp.models import CashBackUser
 class QrCodeScanView(APIView):
-    """
-    API View for scanning QR codes.
-    """
-
     def get(self, request, fiskal_raqam):
-        check_filter= CheckModel.objects.all().filter(fiskal_raqam=int(fiskal_raqam))
+        check_filter= CheckModel.objects.all().filter(fiskal_raqam=int(fiskal_raqam),status=1)
         print(check_filter)
-        for i in check_filter:
-            pul = i.money
-            odam = i.user_id
-            for i in CashBackUser.objects.all().filter(user_id=odam):
-                cashback = i.money
-            update = CashBackUser.objects.all().filter(user_id=odam).update(money=cashback+int(pul)*0.01)
+        if check_filter:
+            for i in check_filter:
+                pul = i.money
+                odam = i.user_id
+                for i in CashBackUser.objects.all().filter(user_id=odam):
+                    cashback = i.money
+                update = CashBackUser.objects.all().filter(user_id=odam).update(money=cashback+int(pul)*0.01)
+                one_time_use = CheckModel.objects.all().filter(fiskal_raqam=fiskal_raqam).update(status=0)
+                return Response({"fiskal_raqam": fiskal_raqam}, status=status.HTTP_200_OK)
+
+        else:
+            return Response({"MSG": "Bu fiskal raqam allaqachon ishlatilgan"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
-        return Response({"fiskal_raqam": fiskal_raqam}, status=status.HTTP_200_OK)
+
 
