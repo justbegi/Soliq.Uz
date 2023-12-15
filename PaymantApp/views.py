@@ -159,7 +159,7 @@ class QrCodeScanView(APIView):
                     cashback = i.money
                 update = CashBackUser.objects.all().filter(user_id=odam).update(money=cashback+int(pul)*0.01)
                 one_time_use = CheckModel.objects.all().filter(fiskal_raqam=fiskal_raqam).update(status=0)
-                return Response({"fiskal_raqam": fiskal_raqam}, status=status.HTTP_200_OK)
+                return Response({"Qoshilgan cashback summasi": int(pul)*0.01,"Umumiy pul miqdori":cashback+int(pul)*0.01}, status=status.HTTP_200_OK)
 
         else:
             return Response({"MSG": "Bu fiskal raqam allaqachon ishlatilgan"}, status=status.HTTP_400_BAD_REQUEST)
