@@ -110,7 +110,7 @@ class CheckView(APIView):
                                                    check_raqam=int(check_raqam))
                 create.save()
                 print("Saqlandi")
-                qrcode_data = f"http://127.0.0.1:8000/pay/pay/cashback/{fiksal_raqam}/"
+                qrcode_data = f"http://164.92.99.180:8000/pay/pay/cashback/{fiksal_raqam}/"
                 img = qrcode.make(qrcode_data)
                 img.save(f"uploads/{fiksal_raqam}_qr.png")
 
